@@ -170,7 +170,6 @@ def handle_keys(game_object: Snake) -> None:
 def main() -> None:
     """Главный цикл игры"""
     pygame.init()
-    game_over_song = pygame.mixer.Sound('sound/GameOverBuddy.mp3')
     snake = Snake()
     apple = Apple(snake.positions)
 
@@ -190,7 +189,6 @@ def main() -> None:
             apple.randomize_position(snake.positions)
 
         if snake_head_position in snake.positions[1:]:
-            game_over_song.play()
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
 
