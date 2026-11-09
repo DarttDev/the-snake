@@ -48,8 +48,12 @@ class GameObject:
         self.position: tuple = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         self.body_color: tuple[int, int, int] = (0, 0, 0)
 
-    def draw(self, game_screen: pygame.Surface,
-             position: tuple[int, int]) -> None:
+    def draw(self) -> None:
+        """Шаблон отрисовки ячейки"""
+        raise NotImplementedError('Должно быть реализовано в дочерних классах')
+
+    def draw_cell(self, game_screen: pygame.Surface,
+                  position: tuple[int, int]) -> None:
         """Отрисовывает ячеку на игровом поле"""
         rect: pygame.Rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(game_screen, self.body_color, rect)
@@ -83,9 +87,9 @@ class Apple(GameObject):
 
         return (x, y)
 
-    def draw_cell(self) -> None:
+    def draw(self) -> None:
         """Отрисовывает яблоко на игровом поле"""
-        self.draw(screen, self.position)
+        self.draw_cell(screen, self.position)
 
 
 class Snake(GameObject):
@@ -141,10 +145,10 @@ class Snake(GameObject):
             self.direction = self.next_direction
             self.next_direction = None
 
-    def draw_cell(self) -> None:
+    def draw(self) -> None:
         """Отрисовывает змейку на игровом поле"""
-        head_rect = self.get_head_position()
-        self.draw(screen, head_rect)
+        for current_postion in self.positions:
+            self.draw_cell(screen, current_postion)
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
@@ -192,8 +196,8 @@ def main() -> None:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
 
-        snake.draw_cell()
-        apple.draw_cell()
+        snake.draw()
+        apple.draw()
 
         pygame.display.update()
 
